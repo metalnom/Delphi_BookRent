@@ -1,0 +1,37 @@
+unit FindUserForm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
+  Vcl.DBGrids, Vcl.ExtCtrls;
+
+type
+  TfrmFindUser = class(TForm)
+    Panel1: TPanel;
+    grdList: TDBGrid;
+    Panel2: TPanel;
+    Label1: TLabel;
+    edtSearch: TEdit;
+    chkSearchName: TCheckBox;
+    chkSearchPhone: TCheckBox;
+    btnSelect: TButton;
+    btnClose: TButton;
+    dsFindUser: TDataSource;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmFindUser: TfrmFindUser;
+
+implementation
+
+{$R *.dfm}
+
+uses DataAccessModule;
+
+end.

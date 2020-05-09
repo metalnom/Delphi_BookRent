@@ -1,0 +1,113 @@
+unit RentForm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Data.DB,
+  Vcl.Grids, Vcl.DBGrids, Vcl.Mask, Vcl.DBCtrls;
+
+type
+  TfrmRent = class(TForm)
+    pnlHeader: TPanel;
+    pnlContent: TPanel;
+    lblCaption: TLabel;
+    btnAdd: TButton;
+    btnClose: TButton;
+    pnlInput: TPanel;
+    pnlGrid: TPanel;
+    Splitter1: TSplitter;
+    pnlGridHeader: TPanel;
+    grdList: TDBGrid;
+    Label1: TLabel;
+    edtSearch: TEdit;
+    chkSearchBook: TCheckBox;
+    chkSearchUser: TCheckBox;
+    grpUser: TGroupBox;
+    grpBook: TGroupBox;
+    btnFindUser: TButton;
+    GroupBox1: TGroupBox;
+    imgUser: TImage;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    edtUserName: TDBEdit;
+    edtUserBirth: TDBEdit;
+    edtUserPhone: TDBEdit;
+    GroupBox3: TGroupBox;
+    imgBook: TImage;
+    btnFindBook: TButton;
+    Label5: TLabel;
+    edtBookName: TDBEdit;
+    Label6: TLabel;
+    edtBookAuthor: TDBEdit;
+    Label7: TLabel;
+    edtBookPrice: TDBEdit;
+    btnRent: TButton;
+    btnReturn: TButton;
+    btnCancel: TButton;
+    dsRent: TDataSource;
+    dsRentUser: TDataSource;
+    dsRentBook: TDataSource;
+    procedure dsRentUserDataChange(Sender: TObject; Field: TField);
+    procedure dsRentBookDataChange(Sender: TObject; Field: TField);
+    procedure btnFindUserClick(Sender: TObject);
+    procedure btnCloseClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmRent: TfrmRent;
+
+implementation
+
+{$R *.dfm}
+
+uses DataAccessModule, CommonFunctions, FindUserForm;
+
+procedure TfrmRent.btnCloseClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfrmRent.btnFindUserClick(Sender: TObject);
+begin
+  frmFindUser := TfrmFindUser.Create(nil);
+  try
+    frmFindUser.ShowModal;
+    if dmDataAccess.qryRent.State <> dsEdit then
+      dmDataAccess.qryRent.Edit;
+
+    dmDataAccess.qryRent.FieldByName('USER_SEQ').AsInteger := frmFindUser.SelectedSeq;
+//    ShowMessage(frmFindUser.SelectedSeq.ToString);
+  finally
+    frmFindUser.Free;
+  end;
+end;
+
+procedure TfrmRent.dsRentBookDataChange(Sender: TObject; Field: TField);
+var
+  LField: TField;
+begin
+  if dmDataAccess.qryRentBook.State <> dsBrowse then
+    Exit;
+
+  LField := dmDataAccess.qryRentBook.FieldByName('BOOK_IMAGE');
+  LoadImageFromBlobField(imgBook, LField as TBlobField);
+end;
+
+procedure TfrmRent.dsRentUserDataChange(Sender: TObject; Field: TField);
+var
+  LField: TField;
+begin
+  if dmDataAccess.qryRentUser.State <> dsBrowse then
+    Exit;
+
+  LField := dmDataAccess.qryRentUser.FieldByName('USER_IMAGE');
+  LoadImageFromBlobField(imgUser, LField as TBlobField);
+end;
+
+end.
